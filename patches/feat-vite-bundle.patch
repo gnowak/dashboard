@@ -1,0 +1,810 @@
+diff --git a/package.json b/package.json
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/package.json
+@@ -0,0 +28 @@
++{
++  "name": "geoff-dashboard",
++  "private": true,
++  "version": "1.0.0",
++  "type": "module",
++  "scripts": {
++    "dev": "vite",
++    "build": "vite build",
++    "preview": "vite preview"
++  },
++  "dependencies": {
++    "fast-xml-parser": "^4.4.1",
++    "gtfs-realtime-bindings": "^1.1.1",
++    "lucide-react": "^0.453.0",
++    "react": "^18.2.0",
++    "react-dom": "^18.2.0"
++  },
++  "devDependencies": {
++    "@types/react": "^18.2.79",
++    "@types/react-dom": "^18.2.25",
++    "@vitejs/plugin-react-swc": "^3.5.0",
++    "autoprefixer": "^10.4.19",
++    "postcss": "^8.4.41",
++    "tailwindcss": "^3.4.7",
++    "typescript": "^5.5.3",
++    "vite": "^5.4.0"
++  }
++}
+
+diff --git a/tsconfig.json b/tsconfig.json
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/tsconfig.json
+@@ -0,0 +16 @@
++{
++  "compilerOptions": {
++    "target": "ES2020",
++    "useDefineForClassFields": true,
++    "lib": ["ES2020", "DOM", "DOM.Iterable"],
++    "module": "ESNext",
++    "skipLibCheck": true,
++    "jsx": "react-jsx",
++    "moduleResolution": "Bundler",
++    "resolveJsonModule": true,
++    "isolatedModules": true,
++    "noEmit": true,
++    "paths": { "@/*": ["./src/*"] }
++  },
++  "include": ["src"]
++}
+
+diff --git a/vite.config.ts b/vite.config.ts
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/vite.config.ts
+@@ -0,0 +8 @@
++import { defineConfig } from 'vite'
++import react from '@vitejs/plugin-react-swc'
++import path from 'path'
++
++export default defineConfig({
++  plugins: [react()],
++  resolve: { alias: { '@': path.resolve(__dirname, './src') } }
++})
+
+diff --git a/tailwind.config.js b/tailwind.config.js
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/tailwind.config.js
+@@ -0,0 +34 @@
++/** @type {import('tailwindcss').Config} */
++export default {
++  darkMode: ["class"],
++  content: ["./index.html", "./src/**/*.{ts,tsx}"],
++  theme: {
++    extend: {
++      colors: {
++        border: "hsl(var(--border))",
++        input: "hsl(var(--input))",
++        ring: "hsl(var(--ring))",
++        background: "hsl(var(--background))",
++        foreground: "hsl(var(--foreground))",
++        primary: {
++          DEFAULT: "hsl(var(--primary))",
++          foreground: "hsl(var(--primary-foreground))"
++        },
++        secondary: {
++          DEFAULT: "hsl(var(--secondary))",
++          foreground: "hsl(var(--secondary-foreground))"
++        },
++        accent: {
++          DEFAULT: "hsl(var(--accent))",
++          foreground: "hsl(var(--accent-foreground))"
++        },
++        muted: {
++          DEFAULT: "hsl(var(--muted))",
++          foreground: "hsl(var(--muted-foreground))"
++        }
++      },
++      borderRadius: { xl: "1rem", "2xl": "1.25rem" }
++    }
++  },
++  plugins: []
++}
+
+diff --git a/postcss.config.js b/postcss.config.js
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/postcss.config.js
+@@ -0,0 +3 @@
++export default {
++  plugins: { tailwindcss: {}, autoprefixer: {} }
++}
+
+diff --git a/index.html b/index.html
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/index.html
+@@ -0,0 +21 @@
++<!doctype html>
++<html lang="en">
++  <head>
++    <meta charset="UTF-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <title>Geoff's Dashboard</title>
++    <script>
++    (function () {
++      try {
++        var pref = localStorage.getItem('geoff-dark');
++        var wantsDark = pref === '1' || (pref === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
++        if (wantsDark) document.documentElement.classList.add('dark');
++      } catch (e) {}
++    })();
++    </script>
++  </head>
++  <body class="min-h-dvh">
++    <div id="root"></div>
++    <script type="module" src="/src/main.tsx"></script>
++  </body>
++</html>
+
+diff --git a/src/index.css b/src/index.css
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/index.css
+@@ -0,0 +49 @@
++@tailwind base;
++@tailwind components;
++@tailwind utilities;
++
++@layer base {
++  :root {
++    --background: 0 0% 100%;
++    --foreground: 222.2 47.4% 11.2%;
++
++    --primary: 221.2 83.2% 53.3%;
++    --primary-foreground: 210 40% 98%;
++
++    --secondary: 210 40% 96.1%;
++    --secondary-foreground: 222.2 47.4% 11.2%;
++
++    --muted: 210 40% 96.1%;
++    --muted-foreground: 215.4 16.3% 46.9%;
++
++    --accent: 210 40% 96.1%;
++    --accent-foreground: 222.2 47.4% 11.2%;
++
++    --border: 214.3 31.8% 91.4%;
++    --input: 214.3 31.8% 91.4%;
++    --ring: 221.2 83.2% 53.3%;
++  }
++  .dark {
++    --background: 222.2 84% 4.9%;
++    --foreground: 210 40% 98%;
++
++    --primary: 217.2 91.2% 59.8%;
++    --primary-foreground: 222.2 47.4% 11.2%;
++
++    --secondary: 217.2 32.6% 17.5%;
++    --secondary-foreground: 210 40% 98%;
++
++    --muted: 217.2 32.6% 17.5%;
++    --muted-foreground: 215 20.2% 65.1%;
++
++    --accent: 217.2 32.6% 17.5%;
++    --accent-foreground: 210 40% 98%;
++
++    --border: 217.2 32.6% 17.5%;
++    --input: 217.2 32.6% 17.5%;
++    --ring: 224.3 76.3% 48%;
++  }
++
++  * { @apply border-border; }
++  body { @apply bg-background text-foreground; }
++}
+
+diff --git a/src/lib/cn.ts b/src/lib/cn.ts
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/lib/cn.ts
+@@ -0,0 +3 @@
++export function cn(...classes: (string | undefined | false | null)[]) {
++  return classes.filter(Boolean).join(' ')
++}
+
+diff --git a/src/components/ui/card.tsx b/src/components/ui/card.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/components/ui/card.tsx
+@@ -0,0 +13 @@
++import { cn } from '@/lib/cn'
++export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
++  return <div className={cn('rounded-2xl border bg-background', className)} {...props} />
++}
++export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
++  return <div className={cn('p-4', className)} {...props} />
++}
++export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
++  return <h3 className={cn('text-base font-semibold', className)} {...props} />
++}
++export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
++  return <div className={cn('p-4 pt-0', className)} {...props} />
++}
+
+diff --git a/src/components/ui/button.tsx b/src/components/ui/button.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/components/ui/button.tsx
+@@ -0,0 +27 @@
++import { cn } from '@/lib/cn'
++import * as React from 'react'
++
++type Variant = 'default' | 'secondary' | 'outline' | 'ghost'
++type Size = 'sm' | 'icon' | 'default'
++
++export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
++  variant?: Variant
++  size?: Size
++}
++
++const base = 'inline-flex items-center justify-center rounded-2xl border text-sm transition select-none'
++const variants: Record<Variant, string> = {
++  default: 'bg-primary text-primary-foreground border-transparent hover:opacity-90',
++  secondary: 'bg-secondary text-secondary-foreground border-transparent hover:opacity-90',
++  outline: 'bg-transparent text-foreground border hover:bg-accent',
++  ghost: 'bg-transparent border-transparent hover:bg-accent'
++}
++const sizes: Record<Size, string> = {
++  default: 'h-10 px-4 py-2',
++  sm: 'h-8 px-3',
++  icon: 'h-8 w-8 p-0'
++}
++
++export function Button({ className, variant = 'default', size = 'default', ...props }: ButtonProps) {
++  return <button className={cn(base, variants[variant], sizes[size], className)} {...props} />
++}
+
+diff --git a/src/components/ui/input.tsx b/src/components/ui/input.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/components/ui/input.tsx
+@@ -0,0 +14 @@
++import { cn } from '@/lib/cn'
++import * as React from 'react'
++
++export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
++
++export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input({ className, ...props }, ref) {
++  return (
++    <input
++      ref={ref}
++      className={cn('flex h-10 w-full rounded-2xl border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring', className)}
++      {...props}
++    />
++  )
++})
+
+diff --git a/src/components/ui/badge.tsx b/src/components/ui/badge.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/components/ui/badge.tsx
+@@ -0,0 +7 @@
++import { cn } from '@/lib/cn'
++export function Badge({ className, variant = 'default', ...props }: { className?: string, variant?: 'default'|'secondary' } & React.HTMLAttributes<HTMLSpanElement>) {
++  const styles = variant === 'default'
++    ? 'bg-primary text-primary-foreground'
++    : 'bg-secondary text-secondary-foreground'
++  return <span className={cn('inline-flex items-center rounded-xl px-2 py-0.5 text-xs font-medium', styles, className)} {...props} />
++}
+
+diff --git a/src/components/ui/progress.tsx b/src/components/ui/progress.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/components/ui/progress.tsx
+@@ -0,0 +9 @@
++import { cn } from '@/lib/cn'
++export function Progress({ value = 0, className }: { value?: number, className?: string }) {
++  const v = Math.min(100, Math.max(0, value))
++  return (
++    <div className={cn('h-2 w-full rounded-xl bg-muted', className)}>
++      <div className="h-2 rounded-xl bg-primary" style={{ width: v + '%' }} />
++    </div>
++  )
++}
+
+diff --git a/src/components/ui/switch.tsx b/src/components/ui/switch.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/components/ui/switch.tsx
+@@ -0,0 +22 @@
++import { cn } from '@/lib/cn'
++import * as React from 'react'
++
++export function Switch({ checked, onCheckedChange, className }: { checked?: boolean, onCheckedChange?: (v: boolean)=>void, className?: string }) {
++  const [focus, setFocus] = React.useState(false)
++  return (
++    <button
++      type="button"
++      role="switch"
++      aria-checked={checked}
++      onClick={() => onCheckedChange?.(!checked)}
++      onFocus={() => setFocus(true)}
++      onBlur={() => setFocus(false)}
++      className={cn('relative inline-flex h-6 w-11 items-center rounded-full border transition',
++        checked ? 'bg-primary border-transparent' : 'bg-muted',
++        focus ? 'ring-2 ring-ring' : '',
++        className)}>
++      <span className={cn('inline-block h-4 w-4 transform rounded-full bg-background transition',
++        checked ? 'translate-x-6' : 'translate-x-1')} />
++    </button>
++  )
++}
+
+diff --git a/src/main.tsx b/src/main.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/main.tsx
+@@ -0,0 +10 @@
++import React from 'react'
++import ReactDOM from 'react-dom/client'
++import './index.css'
++import Dashboard from './Dashboard'
++
++ReactDOM.createRoot(document.getElementById('root')!).render(
++  <React.StrictMode>
++    <Dashboard />
++  </React.StrictMode>
++)
+
+diff --git a/src/Dashboard.tsx b/src/Dashboard.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/Dashboard.tsx
+@@ -0,0 +299 @@
++/* Geoff’s Personal Dashboard (v1, bundled) */ 
++import React, { useEffect, useMemo, useRef, useState } from "react";
++import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
++import { Button } from "@/components/ui/button";
++import { Input } from "@/components/ui/input";
++import { Badge } from "@/components/ui/badge";
++import { Progress } from "@/components/ui/progress";
++import { Switch } from "@/components/ui/switch";
++import {
++  Calendar as CalendarIcon, Clock, CloudSun, Target as TargetIcon, ListPlus, Play, Pause, RotateCcw,
++  Cpu, Rocket, TrendingUp, DollarSign, Plus, Minus, Save, NotebookPen, ChevronRight, RefreshCcw,
++} from "lucide-react";
++
++const ENDPOINTS = {
++  WEATHER_ENDPOINT: import.meta?.env?.VITE_WEATHER_ENDPOINT || "https://api.open-meteo.com/v1/forecast?latitude=43.651&longitude=-79.347&current_weather=true&timezone=auto",
++  CALENDAR_ENDPOINT: import.meta?.env?.VITE_CALENDAR_ENDPOINT || "/api/calendar",
++  CAPTURE_ENDPOINT: import.meta?.env?.VITE_CAPTURE_ENDPOINT || "/api/capture",
++  FINANCE_MTD_ENDPOINT: import.meta?.env?.VITE_FINANCE_MTD_ENDPOINT || "/api/finance/mtd",
++  CREW_STATUS_ENDPOINT: import.meta?.env?.VITE_CREW_STATUS_ENDPOINT || "/api/crew/status",
++  OLLAMA_HEALTH: import.meta?.env?.VITE_OLLAMA_HEALTH || "http://localhost:11434/api/tags",
++  BOC_FX_USDCAD: import.meta?.env?.VITE_BOC_FX_USDCAD || "https://www.bankofcanada.ca/valet/observations/FXUSDCAD?recent=2",
++  WATCHLIST_ENDPOINT: import.meta?.env?.VITE_WATCHLIST_ENDPOINT || "/api/markets/watchlist",
++  TTC_ALERTS_ENDPOINT: import.meta?.env?.VITE_TTC_ALERTS_ENDPOINT || "/api/ttc-alerts",
++  ENV_CAN_ALERTS_ENDPOINT: import.meta?.env?.VITE_ENV_CAN_ALERTS_ENDPOINT || "/api/envcan-alerts",
++};
++
++async function fetchJSON(url: string, opts: RequestInit = {}) {
++  try { const res = await fetch(url, opts); if (!res.ok) throw new Error(`${res.status} ${res.statusText}`); return await res.json(); }
++  catch (e) { console.warn("Fetch error", url, e); return null; }
++}
++
++const fmtTime = (d = new Date()) => d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
++const fmtDate = (d = new Date()) => d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
++const clamp = (n: number, min: number, max: number) => Math.min(Math.max(n, min), max);
++
++function weatherDesc(code: number): string {
++  if (code === 0) return "Clear sky";
++  if (code === 1 || code === 2) return "Mostly clear";
++  if (code === 3) return "Overcast";
++  if (code === 45 || code === 48) return "Fog";
++  if ([51, 53, 55].includes(code)) return "Drizzle";
++  if ([56, 57].includes(code)) return "Freezing drizzle";
++  if ([61, 63, 65].includes(code)) return "Rain";
++  if ([66, 67].includes(code)) return "Freezing rain";
++  if ([71, 73, 75, 77].includes(code)) return "Snow";
++  if ([80, 81, 82].includes(code)) return "Rain showers";
++  if ([85, 86].includes(code)) return "Snow showers";
++  if (code === 95) return "Thunderstorm";
++  if (code === 96 || code === 99) return "Thunderstorm w/ hail";
++  return "—";
++}
++function weatherIcon(code: number): string {
++  if (code === 0) return "☀️";
++  if (code === 1 || code === 2) return "🌤️";
++  if (code === 3) return "☁️";
++  if (code === 45 || code === 48) return "🌫️";
++  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return "🌧️";
++  if ([56, 57, 66, 67].includes(code)) return "🌧️";
++  if ([71, 73, 75, 77, 85, 86].includes(code)) return "🌨️";
++  if ([95, 96, 99].includes(code)) return "⛈️";
++  return "⛅";
++}
++
++function useNow(intervalMs = 30000) {
++  const [now, setNow] = useState(new Date());
++  useEffect(() => { const t = setInterval(() => setNow(new Date()), intervalMs); return () => clearInterval(t); }, [intervalMs]);
++  return now;
++}
++function ClockDate() { const now = useNow(); return <div className="text-sm text-muted-foreground">{fmtDate(now)}</div>; }
++function ClockTime() { const now = useNow(); return <div className="font-mono text-lg tabular-nums">{fmtTime(now)}</div>; }
++
++export default function Dashboard() {
++  const [darkMode, setDarkMode] = useState<boolean>(() => {
++    if (typeof window === 'undefined') return true;
++    const saved = localStorage.getItem('geoff-dark');
++    if (saved !== null) return saved === '1';
++    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
++  });
++  useEffect(() => {
++    if (typeof window !== 'undefined') localStorage.setItem('geoff-dark', darkMode ? '1' : '0');
++    if (typeof document !== 'undefined') document.documentElement.classList.toggle('dark', darkMode);
++  }, [darkMode]);
++
++  const [weather, setWeather] = useState<{ tempC: number; condition: string; icon?: string } | null>(null);
++  useEffect(() => { (async () => {
++    const data = await fetchJSON(ENDPOINTS.WEATHER_ENDPOINT);
++    let out = null;
++    if (data?.current_weather) {
++      const cw = data.current_weather;
++      out = { tempC: Math.round(Number(cw.temperature)), condition: weatherDesc(Number(cw.weathercode)), icon: weatherIcon(Number(cw.weathercode)) };
++    }
++    setWeather(out || { tempC: 22, condition: "Partly Cloudy", icon: "⛅" });
++  })(); }, []);
++
++  type CalEvent = { id: string; title: string; startISO: string; endISO?: string; location?: string };
++  const [events, setEvents] = useState<CalEvent[]>([]);
++  useEffect(() => { (async () => {
++    const data = await fetchJSON(ENDPOINTS.CALENDAR_ENDPOINT);
++    setEvents(data || [
++      { id: "1", title: "Daily focus block", startISO: new Date(Date.now() + 60*60*1000).toISOString(), endISO: new Date(Date.now() + 2*60*60*1000).toISOString() },
++      { id: "2", title: "Upload 3 Shorts", startISO: new Date(Date.now() + 3*60*60*1000).toISOString() },
++    ]);
++  })(); }, []);
++
++  const [capture, setCapture] = useState("");
++  const [captureItems, setCaptureItems] = useState<{ id: string; text: string; ts: number }[]>(() => {
++    const raw = typeof window !== 'undefined' ? localStorage.getItem("geoff-captures") : null;
++    return raw ? JSON.parse(raw) : [];
++  });
++  useEffect(() => { localStorage.setItem("geoff-captures", JSON.stringify(captureItems)); }, [captureItems]);
++  async function submitCapture() {
++    const text = capture.trim(); if (!text) return;
++    setCapture(""); setCaptureItems((prev) => [{ id: crypto.randomUUID(), text, ts: Date.now() }, ...prev].slice(0, 20));
++    fetchJSON(ENDPOINTS.CAPTURE_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
++  }
++
++  const [workMin, setWorkMin] = useState<number>(() => Number(localStorage.getItem("geoff-workMin")) || 25);
++  const [breakMin, setBreakMin] = useState<number>(() => Number(localStorage.getItem("geoff-breakMin")) || 5);
++  const [secsLeft, setSecsLeft] = useState<number>(workMin * 60);
++  const [running, setRunning] = useState(false);
++  const [phase, setPhase] = useState<"work" | "break">("work");
++  const timerRef = useRef<number | null>(null);
++  useEffect(() => { localStorage.setItem("geoff-workMin", String(workMin)); }, [workMin]);
++  useEffect(() => { localStorage.setItem("geoff-breakMin", String(breakMin)); }, [breakMin]);
++  useEffect(() => {
++    if (!running) return;
++    timerRef.current = window.setInterval(() => {
++      setSecsLeft((s) => { if (s <= 1) { const next = phase === "work" ? "break" : "work"; setPhase(next); return (next === "work" ? workMin : breakMin) * 60; } return s - 1; });
++    }, 1000);
++    return () => { if (timerRef.current) window.clearInterval(timerRef.current); timerRef.current = null; };
++  }, [running, phase, workMin, breakMin]);
++  useEffect(() => { if (!running) setSecsLeft((phase === "work" ? workMin : breakMin) * 60); }, [workMin, breakMin, phase, running]);
++  const mins = Math.floor(secsLeft / 60).toString().padStart(2, "0"); const secs = (secsLeft % 60).toString().padStart(2, "0"); const phaseLabel = phase === "work" ? "Focus" : "Break";
++
++  const [mtd, setMtd] = useState<number>(0); const [target, setTarget] = useState<number>(10000);
++  useEffect(() => { (async () => {
++    const data = await fetchJSON(ENDPOINTS.FINANCE_MTD_ENDPOINT);
++    if (data) { setMtd(Number(data.mtd || 0)); setTarget(Number(data.target || 10000)); } else { setMtd(1250); setTarget(10000); }
++  })(); }, []);
++  const pct = clamp(target ? (mtd / target) * 100 : 0, 0, 100);
++
++  const [crew, setCrew] = useState<{ queue: number; running: number; lastRunISO?: string } | null>(null);
++  const [ollamaOK, setOllamaOK] = useState<boolean>(false);
++  const [autoRun, setAutoRun] = useState<boolean>(() => localStorage.getItem("geoff-autorun") === "1");
++  useEffect(() => { localStorage.setItem("geoff-autorun", autoRun ? "1" : "0"); }, [autoRun]);
++  async function refreshAgentOps() {
++    const s = await fetchJSON(ENDPOINTS.CREW_STATUS_ENDPOINT);
++    setCrew(s || { queue: 3, running: 1, lastRunISO: new Date().toISOString() });
++    const oll = await fetchJSON(ENDPOINTS.OLLAMA_HEALTH);
++    setOllamaOK(!!oll);
++  }
++  useEffect(() => { refreshAgentOps(); }, []);
++
++  const [proteinGoal, setProteinGoal] = useState<number>(() => Number(localStorage.getItem("geoff-proteinGoal")) || 130);
++  const [proteinToday, setProteinToday] = useState<number>(() => Number(localStorage.getItem("geoff-proteinToday")) || 0);
++  useEffect(() => { localStorage.setItem("geoff-proteinGoal", String(proteinGoal)); }, [proteinGoal]);
++  useEffect(() => { localStorage.setItem("geoff-proteinToday", String(proteinToday)); }, [proteinToday]);
++  function addProtein(n: number) { setProteinToday((p) => clamp(p + n, 0, 10000)); }
++
++  type Ticker = { symbol: string; price: number; changePct: number; currency?: string };
++  const [watch, setWatch] = useState<Ticker[]>([]);
++  useEffect(() => { (async () => {
++    const items: Ticker[] = [];
++    const boc = await fetchJSON(ENDPOINTS.BOC_FX_USDCAD);
++    const obs = boc?.observations;
++    if (Array.isArray(obs) && obs.length >= 1) {
++      const latest = Number(obs[obs.length - 1]?.FXUSDCAD?.v);
++      const prev = Number((obs.length > 1 ? obs[obs.length - 2]?.FXUSDCAD?.v : latest));
++      if (!Number.isNaN(latest) && !Number.isNaN(prev) && prev) {
++        const changePct = ((latest - prev) / prev) * 100;
++        items.push({ symbol: "USD/CAD", price: latest, changePct });
++      }
++    }
++    const data = await fetchJSON(ENDPOINTS.WATCHLIST_ENDPOINT);
++    if (Array.isArray(data) && data.length) items.push(...data);
++    if (!items.length) items.push({ symbol: "USD/CAD", price: 1.35, changePct: 0.05 }, { symbol: "BTC", price: 65000, changePct: 1.2, currency: "USD" }, { symbol: "NVDA", price: 122.34, changePct: -0.8, currency: "USD" });
++    setWatch(items);
++  })(); }, []);
++
++  const next3Events = useMemo(() => [...events].sort((a,b)=>new Date(a.startISO).getTime()-new Date(b.startISO).getTime()).slice(0,3), [events]);
++
++  function formatTickerValue(t: Ticker): string {
++    if (t.symbol.includes("/")) {
++      const [base, quote] = t.symbol.split("/");
++      const nf = new Intl.NumberFormat(undefined, { minimumFractionDigits: t.price >= 10 ? 2 : 4, maximumFractionDigits: 5 });
++      return `${nf.format(t.price)} ${quote} per ${base}`;
++    }
++    const currency = t.currency || "USD";
++    const nf = new Intl.NumberFormat(undefined, { style: "currency", currency, maximumFractionDigits: currency === "JPY" ? 0 : 2 });
++    return nf.format(t.price);
++  }
++
++  return (
++    <div className="min-h-dvh w-full bg-background text-foreground">
++      <header className="sticky top-0 z-10 border-b bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/50">
++        <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
++          <div className="flex items-center gap-3">
++            <div className="h-9 w-9 rounded-2xl bg-primary/10 grid place-items-center"><Rocket className="h-5 w-5" /></div>
++            <div><ClockDate /><h1 className="text-xl font-semibold leading-tight">Hey Geoff — here’s your snapshot</h1></div>
++          </div>
++          <div className="text-right">
++            <div className="flex items-center justify-end gap-2 mb-1"><span className="text-xs text-muted-foreground">Dark mode</span><Switch checked={darkMode} onCheckedChange={(v)=>setDarkMode(Boolean(v))} /></div>
++            <div className="text-sm text-muted-foreground">Local time</div><ClockTime />
++          </div>
++        </div>
++      </header>
++      <main className="mx-auto max-w-7xl px-4 py-6 grid gap-6 md:grid-cols-12">
++        <Card className="md:col-span-4 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><Clock className="h-5 w-5" /> Focus Timer</CardTitle></CardHeader>
++          <CardContent className="space-y-4">
++            <div className="flex items-end justify-between"><div><div className="text-sm text-muted-foreground">Phase</div><div className="text-lg font-medium">{phaseLabel}</div></div><div className="font-mono text-3xl tabular-nums">{mins}:{secs}</div></div>
++            <div className="flex items-center gap-2"><Button size="sm" onClick={()=>setRunning(true)}><Play className="h-4 w-4 mr-1" />Start</Button><Button size="sm" variant="secondary" onClick={()=>setRunning(false)}><Pause className="h-4 w-4 mr-1" />Pause</Button><Button size="sm" variant="outline" onClick={()=>{ setRunning(false); setPhase("work"); setSecsLeft(workMin * 60); }}><RotateCcw className="h-4 w-4 mr-1" />Reset</Button></div>
++            <div className="grid grid-cols-2 gap-3">
++              <div><div className="text-xs text-muted-foreground mb-1">Work (min)</div><div className="flex gap-2"><Button variant="outline" size="icon" onClick={()=>setWorkMin((m)=>clamp(m - 5, 5, 180))}><Minus className="h-4 w-4" /></Button><Input value={workMin} onChange={(e)=>setWorkMin(clamp(Number(e.target.value || 0), 5, 180))} className="text-center" /><Button variant="outline" size="icon" onClick={()=>setWorkMin((m)=>clamp(m + 5, 5, 180))}><Plus className="h-4 w-4" /></Button></div></div>
++              <div><div className="text-xs text-muted-foreground mb-1">Break (min)</div><div className="flex gap-2"><Button variant="outline" size="icon" onClick={()=>setBreakMin((m)=>clamp(m - 1, 1, 60))}><Minus className="h-4 w-4" /></Button><Input value={breakMin} onChange={(e)=>setBreakMin(clamp(Number(e.target.value || 0), 1, 60))} className="text-center" /><Button variant="outline" size="icon" onClick={()=>setBreakMin((m)=>clamp(m + 1, 1, 60))}><Plus className="h-4 w-4" /></Button></div></div>
++            </div>
++          </CardContent>
++        </Card>
++
++        <Card className="md:col-span-4 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><ListPlus className="h-5 w-5" /> Quick Capture</CardTitle></CardHeader>
++          <CardContent className="space-y-3">
++            <div className="flex gap-2"><Input placeholder="Jot something down… (press Enter to save)" value={capture} onChange={(e)=>setCapture(e.target.value)} onKeyDown={(e)=> e.key === "Enter" && submitCapture()} /><Button onClick={submitCapture}><Save className="h-4 w-4 mr-1" />Save</Button></div>
++            <div className="space-y-2 max-h-48 overflow-auto pr-1">
++              {captureItems.length === 0 && (<div className="text-sm text-muted-foreground">Your last 20 ideas will land here.</div>)}
++              {captureItems.map((c)=>(<div key={c.id} className="flex items-start justify-between gap-3"><div><div className="text-sm leading-snug">{c.text}</div><div className="text-xs text-muted-foreground">{new Date(c.ts).toLocaleString()}</div></div><Button variant="ghost" size="icon" onClick={()=>setCaptureItems((prev)=>prev.filter((x)=>x.id !== c.id))}>✕</Button></div>))}
++            </div>
++          </CardContent>
++        </Card>
++
++        <Card className="md:col-span-4 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><CalendarIcon className="h-5 w-5" /> Next Up</CardTitle></CardHeader>
++          <CardContent className="space-y-2">
++            {next3Events.map((ev)=> (<div key={ev.id} className="flex items-center justify-between rounded-xl border p-2">
++              <div><div className="text-sm font-medium">{ev.title}</div>
++              <div className="text-xs text-muted-foreground">{new Date(ev.startISO).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{ev.endISO ? (<><span> → </span>{new Date(ev.endISO).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</>) : null}</div></div>
++              <Button variant="ghost" size="icon"><ChevronRight className="h-4 w-4" /></Button></div>))}
++            {next3Events.length === 0 && (<div className="text-sm text-muted-foreground">No upcoming events loaded.</div>)}
++          </CardContent>
++        </Card>
++
++        <Card className="md:col-span-3 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><CloudSun className="h-5 w-5" /> Toronto Weather</CardTitle></CardHeader>
++          <CardContent className="flex items-center justify-between"><div><div className="text-3xl font-semibold">{weather?.tempC ?? "--"}°C</div><div className="text-sm text-muted-foreground">{weather?.condition ?? "—"}</div></div><div className="text-5xl">{weather?.icon || "⛅"}</div></CardContent>
++        </Card>
++
++        <Card className="md:col-span-5 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><DollarSign className="h-5 w-5" /> Monthly Revenue</CardTitle></CardHeader>
++          <CardContent className="space-y-3"><div className="flex items-center justify-between"><div><div className="text-sm text-muted-foreground">MTD</div><div className="text-xl font-semibold">${'{mtd}'.replace('{','').replace('}','')}</div></div><div className="text-right"><div className="text-sm text-muted-foreground">Target</div><div className="text-xl font-semibold">${'{target}'.replace('{','').replace('}','')}</div></div></div><Progress value={pct} /><div className="text-xs text-muted-foreground">{pct.toFixed(1)}% of goal</div></CardContent>
++        </Card>
++
++        <Card className="md:col-span-4 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><Cpu className="h-5 w-5" /> Agent Ops</CardTitle></CardHeader>
++          <CardContent className="space-y-3">
++            <div className="flex items-center justify-between"><div className="space-y-1">
++              <div className="text-sm">Crew queue</div><div className="text-lg font-medium">{crew?.queue ?? 0} queued · {crew?.running ?? 0} running</div>
++              <div className="text-xs text-muted-foreground">Last run {crew?.lastRunISO ? new Date(crew.lastRunISO).toLocaleString() : "—"}</div></div>
++              <div className="grid gap-2"><Button variant="outline" size="sm" onClick={refreshAgentOps}><RefreshCcw className="h-4 w-4 mr-1" />Refresh</Button>
++                <div className="flex items-center gap-2 text-sm"><Switch checked={autoRun} onCheckedChange={(v)=>setAutoRun(Boolean(v))} /><span>Auto-run queue</span></div>
++                <Badge variant={ollamaOK ? "default" : "secondary"}>{ollamaOK ? "Ollama OK" : "Ollama Offline"}</Badge></div></div>
++          </CardContent>
++        </Card>
++
++        <Card className="md:col-span-5 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><TargetIcon className="h-5 w-5" /> Protein Today</CardTitle></CardHeader>
++          <CardContent className="space-y-3"><div className="flex items-center justify-between"><div className="text-sm text-muted-foreground">Consumed</div><div className="font-mono text-2xl">{proteinToday}g</div></div>
++            <Progress value={clamp((proteinToday / proteinGoal) * 100, 0, 100)} />
++            <div className="grid grid-cols-4 gap-2">{[15,25,35,50].map((n)=>(<Button key={n} variant="outline" onClick={()=>addProtein(n)}>+{n}g</Button>))}</div>
++            <div className="flex items-center gap-2"><span className="text-sm text-muted-foreground">Goal</span><Input className="w-24" value={proteinGoal} onChange={(e)=>setProteinGoal(clamp(Number(e.target.value || 0), 40, 300))} /><Button variant="ghost" onClick={()=>setProteinToday(0)}>Reset</Button></div>
++          </CardContent>
++        </Card>
++
++        <Card className="md:col-span-7 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><TrendingUp className="h-5 w-5" /> Watchlist</CardTitle></CardHeader>
++          <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-3">
++            {watch.map((t)=>(<div key={t.symbol} className="rounded-xl border p-3">
++              <div className="flex items-center justify-between"><div className="font-medium">{t.symbol}</div>
++                <Badge variant={t.changePct >= 0 ? "default" : "secondary"}>{t.changePct >= 0 ? "+" : ""}{t.changePct.toFixed(2)}%</Badge></div>
++              <div className="mt-1 font-mono">{formatTickerValue(t)}</div>
++            </div>))}
++          </CardContent>
++        </Card>
++
++        <Card className="md:col-span-5 shadow-sm">
++          <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2"><NotebookPen className="h-5 w-5" /> Shortcuts</CardTitle></CardHeader>
++          <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-2">
++            <a className="rounded-xl border p-3 hover:bg-accent" href="http://localhost:3000" target="_blank" rel="noreferrer">Local App</a>
++            <a className="rounded-2xl border p-3 hover:bg-accent" href="https://notion.so" target="_blank" rel="noreferrer">Notion</a>
++            <a className="rounded-2xl border p-3 hover:bg-accent" href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
++            <a className="rounded-2xl border p-3 hover:bg-accent" href="https://studio.youtube.com" target="_blank" rel="noreferrer">YT Studio</a>
++            <a className="rounded-2xl border p-3 hover:bg-accent" href="https://app.crewai.com" target="_blank" rel="noreferrer">CrewAI</a>
++            <a className="rounded-2xl border p-3 hover:bg-accent" href="http://localhost:11434" target="_blank" rel="noreferrer">Ollama</a>
++          </CardContent>
++        </Card>
++      </main>
++      <footer className="mx-auto max-w-7xl px-4 pb-8 text-xs text-muted-foreground">Built fast so you can ship faster. Swap the mock fetchers with your real endpoints when ready.</footer>
++    </div>
++  );
++}
+
+diff --git a/vercel.json b/vercel.json
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/vercel.json
+@@ -0,0 +3 @@
++{
++  "functions": { "api/*.ts": { "runtime": "nodejs20.x", "memory": 128, "maxDuration": 10 } }
++}
+
+diff --git a/api/envcan-alerts.ts b/api/envcan-alerts.ts
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/api/envcan-alerts.ts
+@@ -0,0 +29 @@
++import type { VercelRequest, VercelResponse } from '@vercel/node';
++import { XMLParser } from 'fast-xml-parser';
++const REGION_DEFAULT = 'on61';
++export default async function handler(req: VercelRequest, res: VercelResponse) {
++  try {
++    const region = (req.query.region as string) || REGION_DEFAULT;
++    const url = `https://weather.gc.ca/rss/battleboard/${region}_e.xml`;
++    const r = await fetch(url, { headers: { 'User-Agent': 'GeoffDash/1.0 (envcan-alerts)' } });
++    if (!r.ok) throw new Error(`EnvCan fetch failed: ${r.status} ${r.statusText}`);
++    const xml = await r.text();
++    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
++    const feed = parser.parse(xml);
++    const rawEntries = feed?.feed?.entry;
++    const entries = (Array.isArray(rawEntries) ? rawEntries : rawEntries ? [rawEntries] : []).map((e: any) => ({
++      id: e.id || e.link?.href || e.updated,
++      title: (e.title || '').toString().trim(),
++      updatedISO: e.updated || e.published || null,
++      summary: (typeof e.summary === 'string' ? e.summary : e.summary?.['#text'])?.trim() || '',
++      link: e.link?.href || null,
++    }));
++    res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=600');
++    res.setHeader('Access-Control-Allow-Origin', '*');
++    res.status(200).json({ region, entries });
++  } catch (err: any) {
++    res.setHeader('Access-Control-Allow-Origin', '*');
++    res.status(500).json({ error: err?.message ?? 'failed' });
++  }
++}
++export const config = { runtime: 'nodejs20.x' } as const;
+
+diff --git a/api/ttc-alerts.ts b/api/ttc-alerts.ts
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/api/ttc-alerts.ts
+@@ -0,0 +33 @@
++import type { VercelRequest, VercelResponse } from '@vercel/node';
++import * as GtfsRealtimeBindings from 'gtfs-realtime-bindings';
++const TTC_ALERTS_FEED = 'https://bustime.ttc.ca/gtfsrt/alerts';
++export default async function handler(req: VercelRequest, res: VercelResponse) {
++  try {
++    const resp = await fetch(TTC_ALERTS_FEED, { headers: { 'User-Agent': 'GeoffDash/1.0 (ttc-alerts)' } });
++    if (!resp.ok) throw new Error(`TTC alerts fetch failed: ${resp.status} ${resp.statusText}`);
++    const buf = Buffer.from(await resp.arrayBuffer());
++    const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(buf);
++    const alerts = (feed.entity || []).filter((e: any) => e.alert).map((e: any) => {
++      const a = e.alert;
++      const pickText = (tx: any) => (tx?.translation?.[0]?.text ? String(tx.translation[0].text) : undefined);
++      return {
++        id: e.id, header: pickText(a.headerText) || null, description: pickText(a.descriptionText) || null,
++        url: pickText(a.url) || null, cause: a.cause ?? null, effect: a.effect ?? null, severity: a.severity ?? null,
++        activePeriods: (a.activePeriod || []).map((p: any) => ({
++          start: p.start ? new Date(Number(p.start) * 1000).toISOString() : null,
++          end: p.end ? new Date(Number(p.end) * 1000).toISOString() : null,
++        })),
++        informed: (a.informedEntity || []).map((ie: any) => ({
++          routeId: ie.routeId ?? null, stopId: ie.stopId ?? null, tripId: ie.trip?.tripId ?? null,
++        })),
++      };
++    });
++    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
++    res.setHeader('Access-Control-Allow-Origin', '*');
++    res.status(200).json({ source: 'bustime.ttc.ca', count: alerts.length, alerts });
++  } catch (err: any) {
++    res.setHeader('Access-Control-Allow-Origin', '*');
++    res.status(500).json({ error: err?.message ?? 'failed' });
++  }
++}
++export const config = { runtime: 'nodejs20.x' } as const;
+
+diff --git a/.env.example b/.env.example
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/.env.example
+@@ -0,0 +4 @@
++VITE_WEATHER_ENDPOINT=https://api.open-meteo.com/v1/forecast?latitude=43.651&longitude=-79.347&current_weather=true&timezone=auto
++VITE_BOC_FX_USDCAD=https://www.bankofcanada.ca/valet/observations/FXUSDCAD?recent=2
++VITE_TTC_ALERTS_ENDPOINT=/api/ttc-alerts
++VITE_ENV_CAN_ALERTS_ENDPOINT=/api/envcan-alerts
+
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +6 @@
++node_modules
++dist
++.env*
++*:[Zz]one.Identifier*
++.DS_Store
++.vscode
+
+diff --git a/README.vite.md b/README.vite.md
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/README.vite.md
+@@ -0,0 +18 @@
++# Geoff Dashboard – App + APIs
++
++This branch adds a Vite + React + Tailwind app and includes the TTC + EnvCan serverless APIs for Vercel.
++
++## Local
++```bash
++npm i
++npm run dev
++```
++
++## Deploy (Vercel)
++- Framework: Vite
++- Build: `npm run build`
++- Output: `dist`
++- Env vars:
++  - `VITE_TTC_ALERTS_ENDPOINT=/api/ttc-alerts`
++  - `VITE_ENV_CAN_ALERTS_ENDPOINT=/api/envcan-alerts`
++  - (optional) `VITE_WEATHER_ENDPOINT`, `VITE_BOC_FX_USDCAD`
+
