@@ -1,0 +1,12 @@
+diff --git a/tailwind.config.js b/tailwind.config.js
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -1,6 +1,7 @@
+ /** @type {import('tailwindcss').Config} */
+ export default {
+-  // darkMode: 'media',
++  // Ensure class-based dark mode for shadcn/ui tokens
++  darkMode: ["class"],
+   content: [
+     "./index.html",
+     "./src/**/*.{js,ts,jsx,tsx}",

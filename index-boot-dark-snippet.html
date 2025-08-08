@@ -1,0 +1,10 @@
+<!-- index-boot-dark-snippet.html -->
+<script>
+(function () {
+  try {
+    var pref = localStorage.getItem('geoff-dark');
+    var wantsDark = pref === '1' || (pref === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (wantsDark) document.documentElement.classList.add('dark');
+  } catch (e) {}
+})();
+</script>
